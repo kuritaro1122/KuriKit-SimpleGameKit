@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace KuriKit {
     public interface IKuriKitMonoBehaviour {
-        void Start();
-        void KKReset();
-        void KKStartGame();
-        void KKGameOver();
-        void KKGameClear();
+        void KKUpdate(float uiDeltaTime, float gameDeltaTime);
+        void KKOnLoadTitle();
+        void KKOnLoadGame();
+        void KKOnGameOver();
+        void KKOnGameClear();
     }
 }

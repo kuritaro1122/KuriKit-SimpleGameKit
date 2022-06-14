@@ -22,7 +22,7 @@ namespace KuriKit {
         [SerializeField] float gameTimeScale = 1f;
         public float UITimeScale => Time.unscaledTime;
         public float UIDeltaTime => Time.unscaledDeltaTime;
-        public float GameTimeScale => (this.Pause) ? 0f : this.gameTimeScale;
+        public float GameTimeScale => (this.Pause || this.SceneState != SceneStateEnum.GameScene) ? 0f : this.gameTimeScale;
         public float GameDeltaTime => Time.deltaTime;
         [Header("--- Scene Object ---")]
         [SerializeField] SceneObjectControl sceneObjectControl = new SceneObjectControl();
@@ -47,18 +47,19 @@ namespace KuriKit {
         }
         public void SetScene(SceneStateEnum sceneState) {
             this.SceneState = this._sceneState = sceneState;
+            SetPause(false);
             UpdateSceneGameObject();
             CallKuriKitMonoBehaviourOnState();
+            UpdateTimeScale();
         }
         public void SetPause(bool pause) {
             this.Pause = this._pause = pause;
             UpdateSceneGameObject();
-        }
-        public void UpdateSceneGameObject() {
-            this.sceneObjectControl.UpdateSceneGameObject(this.SceneState, this.Pause);
+            UpdateTimeScale();
         }
         public void SetTimeScale(float timeScale) {
             this.gameTimeScale = timeScale;
+            UpdateTimeScale();
         }
         #endregion
 
@@ -66,14 +67,18 @@ namespace KuriKit {
         void Awake() {
             if (Instance != null) Debug.LogError($"KuriKitGameManager/GameManager is already exist.", this);
             KuriKitGameManager.Instance = this;
-            foreach (var k in this._kuriKitMonoBehaviours)
+            foreach (var k in this._kuriKitMonoBehaviours) {
                 AddKuriKitMonoBehaviours(k);
+            }
         }
         void Start() {
             if (this.autoRestartOnStart) Title();
         }
         void Update() {
             CheckInspector();
+            foreach (var k in this.kuriKitMonoBehaviours) {
+                k.KKUpdate(uiDeltaTime: this.UIDeltaTime, gameDeltaTime: this.GameDeltaTime);
+            }
         }
         void OnValidate() {
             CheckInspector();
@@ -88,22 +93,28 @@ namespace KuriKit {
             System.Action<IKuriKitMonoBehaviour> action;
             switch (this.SceneState) {
                 case SceneStateEnum.TitleScene:
-                    action = k => k.KKReset();
+                    action = k => k.KKOnLoadTitle();
                     break;
                 case SceneStateEnum.GameScene:
-                    action = k => k.KKStartGame();
+                    action = k => k.KKOnLoadGame();
                     break;
                 case SceneStateEnum.GameOverScene:
-                    action = k => k.KKGameOver();
+                    action = k => k.KKOnGameOver();
                     break;
                 case SceneStateEnum.GameClearScene:
-                    action = k => k.KKGameClear();
+                    action = k => k.KKOnGameClear();
                     break;
                 default:
                     action = k => { };
                     break;
             }
             foreach (var k in this.kuriKitMonoBehaviours) action(k);
+        }
+        private void UpdateTimeScale() {
+            Time.timeScale = this.GameTimeScale;
+        }
+        private void UpdateSceneGameObject() {
+            this.sceneObjectControl.UpdateSceneGameObject(this.SceneState, this.Pause);
         }
 
         [System.Serializable]
@@ -112,18 +123,18 @@ namespace KuriKit {
              * ポーズ画面やゲームクリアテキストなど
              */
             [Header("--- Scene Object ---")]
-            [SerializeField] GameObject SceneObjectTitle = null;
-            [SerializeField] GameObject SceneObjectGame = null;
-            [SerializeField] GameObject SceneObjectGameClear = null;
-            [SerializeField] GameObject SceneObjectGameOver = null;
+            [SerializeField] GameObject Title = null;
+            [SerializeField] GameObject Game = null;
+            [SerializeField] GameObject GameClear = null;
+            [SerializeField] GameObject GameOver = null;
             [Header("--- Pause Object ---")]
-            [SerializeField] GameObject SceneObjectPause = null;
+            [SerializeField] GameObject Pause = null;
             public void UpdateSceneGameObject(SceneStateEnum sceneState, bool pause) {
-                if (this.SceneObjectTitle != null) this.SceneObjectTitle.SetActive(sceneState == SceneStateEnum.TitleScene);
-                if (this.SceneObjectGame != null) this.SceneObjectGame.SetActive(sceneState == SceneStateEnum.GameScene);
-                if (this.SceneObjectGameClear != null) this.SceneObjectGameClear.SetActive(sceneState == SceneStateEnum.GameClearScene);
-                if (this.SceneObjectGameOver) this.SceneObjectGameOver.SetActive(sceneState == SceneStateEnum.GameOverScene);
-                if (this.SceneObjectPause != null) this.SceneObjectPause.SetActive(pause);
+                if (this.Title != null) this.Title.SetActive(sceneState == SceneStateEnum.TitleScene);
+                if (this.Game != null) this.Game.SetActive(sceneState == SceneStateEnum.GameScene);
+                if (this.GameClear != null) this.GameClear.SetActive(sceneState == SceneStateEnum.GameClearScene);
+                if (this.GameOver) this.GameOver.SetActive(sceneState == SceneStateEnum.GameOverScene);
+                if (this.Pause != null) this.Pause.SetActive(pause);
             }
         }
     }
