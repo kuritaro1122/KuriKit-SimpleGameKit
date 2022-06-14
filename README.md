@@ -3,6 +3,17 @@
 ゲームの画面を管理する。タイトル画面やゲーム画面、ゲームクリア画面をメソッド一つで切り替えられる。
 ポーズ時には、自動的にタイムスケールを0にセットする。
 
+# Requirement
+* System.Collections.Generic
+* UnityEngine
+* System
+
+# Usage
+① KuriKitGameManagerを任意のオブジェクトにコンポーネント.（1シーンに一つのみ）\
+② KuriKitGameManager以外のクラスを, MonoBehaviourの代わりにBaseKuriKitMonoBehaviourを継承.\
+③ 自由にプログラムを組む.\
+（baseメソッドを呼ぶことで, ゲーム開始時やタイトル遷移時に処理を行える. KKGameクラスを使ってシーンを切り替えたりする）
+
 # DEMO
 ```
 using UnityEngine;
@@ -55,34 +66,11 @@ public class PlayerMovement : BaseKuriKitMonoBehaviour {
 }
 ```
 
-
-# Requirement
-
-* System.Collections.Generic
-* UnityEngine
-* System
-
-# Usage
-
-<!--
-① EntityStatus.cs を任意のGameObjectにコンポーネントして、Tagに「Entity」を追加\
-② RigidBodyとColliderをコンポーネント\
-③ EntityStatusのパラメータを調整
-
-※「Entity」タグが追加されていれば、Start()時に自動的にタグが変更されます。\
-※ RigidBodyのisTriggerはtrueでもfalseでも問題なく動作します。
--->
-① KuriKitGameManagerを任意のオブジェクトにコンポーネント.（1シーンに一つのみ）\
-② KuriKitGameManager以外のクラスを, MonoBehaviourの代わりにBaseKuriKitMonoBehaviourを継承.\
-③ 自由にプログラムを組む.\
-（baseメソッドを呼ぶことで, ゲーム開始時やタイトル遷移時に処理を行える. KKGameクラスを使ってシーンを切り替えたりする）
-
 # [KuriKitGameManager]
 
 # Contains
 
 ## Inspector
-
 ![img](/Img/inspector.png/)
 
 ## Public Variable
