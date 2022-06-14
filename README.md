@@ -3,9 +3,57 @@
 ゲームの画面を管理する。タイトル画面やゲーム画面、ゲームクリア画面をメソッド一つで切り替えられる。
 ポーズ時には、自動的にタイムスケールを0にセットする。
 
-<!--# DEMO
+# DEMO
+```
+using UnityEngine;
+using KuriKit;
 
--->
+public class PlayerMovement : BaseKuriKitMonoBehaviour {
+    [SerializeField] float speed = 10f;
+    public override void KKOnLoadTitle() {
+        this.transform.position = new Vector3(0, this.transform.position.y, 0);
+    }
+    public override void KKUpdate(float uiDeltaTime, float gameDeltaTime) {
+        switch (KKGame.SceneState) {
+            case KuriKitGameManager.SceneStateEnum.TitleScene:
+                if (Input.GetKeyDown(KeyCode.Space)) {
+                    KKGame.StartGame();
+                }
+                break;
+            case KuriKitGameManager.SceneStateEnum.GameScene:
+                Movement(gameDeltaTime);
+                if (Input.GetKeyDown(KeyCode.Space)) {
+                    KKGame.SetPause(!KKGame.Pause);
+                }
+                if (Input.GetKeyDown(KeyCode.Escape) && KKGame.Pause) {
+                    KKGame.Title();
+                }
+                if (Input.GetKeyDown(KeyCode.A)) {
+                    KKGame.GameClear();
+                }
+                if (Input.GetKeyDown(KeyCode.B)) {
+                    KKGame.GameOver();
+                }
+                break;
+            case KuriKitGameManager.SceneStateEnum.GameClearScene:
+                if (Input.GetKeyDown(KeyCode.Escape)) {
+                    KKGame.Title();
+                }
+                break;
+            case KuriKitGameManager.SceneStateEnum.GameOverScene:
+                if (Input.GetKeyDown(KeyCode.Escape)) {
+                    KKGame.Title();
+                }
+                break;
+        }
+    }
+    private void Movement(float deltaTime) {
+        Vector3 pos = this.transform.position;
+        pos.x += this.speed * Input.GetAxisRaw("Horizontal") * deltaTime;
+        this.transform.position = pos;
+    }
+}
+```
 
 
 # Requirement
