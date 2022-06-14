@@ -35,7 +35,7 @@
 
 ## Inspector
 
---
+![img](/img/inspector.png/)
 
 ## Public Variable
 ```
