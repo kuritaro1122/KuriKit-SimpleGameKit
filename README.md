@@ -46,7 +46,7 @@ float UIDeltaTime { get; }
 float GameTimeScale { get; }
 float GameDeltaTime { get; }
 ```
-## public Function
+## Public Function
 ```
 void Title()
 void StartGame()
@@ -68,7 +68,7 @@ SceneStateEnum { GameScene, TitleScene, GameClearScene, GameOverScene }
 
 # Contains
 
-## public Function (virtual)
+## Public Function (virtual)
 ```
 void Start() //no use!!
 void KKUpdate(float uiDeltaTime, float gameDeltaTime)
@@ -79,7 +79,7 @@ void KKOnGameClear()
 
 # [KKGame] （static class)
 
-## static Function
+## Static Function
 ```
 // values
 KuriKitGameManager
