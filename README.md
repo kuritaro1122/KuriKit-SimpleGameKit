@@ -15,7 +15,7 @@
 （baseメソッドを呼ぶことで, ゲーム開始時やタイトル遷移時に処理を行える. KKGameクラスを使ってシーンを切り替えたりする）
 
 # DEMO
-```
+```cs
 using UnityEngine;
 using KuriKit;
 
@@ -83,7 +83,7 @@ float GameTimeScale { get; }
 float GameDeltaTime { get; }
 ```
 ## Public Function
-```
+```cs
 void Title()
 void StartGame()
 void GameOver()
@@ -96,7 +96,7 @@ void SetTimeScale(float timeScene)
 ```
 
 ## Enum
-```
+```cs
 SceneStateEnum { GameScene, TitleScene, GameClearScene, GameOverScene }
 ```
 
@@ -105,7 +105,7 @@ SceneStateEnum { GameScene, TitleScene, GameClearScene, GameOverScene }
 # Contains
 
 ## Public Function (virtual)
-```
+```cs
 void Start() //no use!!
 void KKUpdate(float uiDeltaTime, float gameDeltaTime)
 void KKOnLoadTitle()
@@ -116,7 +116,7 @@ void KKOnGameClear()
 # [KKGame] （static class)
 
 ## Static Function
-```
+```cs
 // values
 KuriKitGameManager
 SceneStateEnum SceneState
